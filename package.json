@@ -3,12 +3,15 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --debug",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "flickity": "^3.0.0",
+    "pinia": "^2.1.7",
     "vue": "^3.3.4",
+    "vue-plyr": "^7.0.0",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {

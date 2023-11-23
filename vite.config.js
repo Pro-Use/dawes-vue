@@ -16,10 +16,15 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://dawesandco.com/api/query',
+        target: 'https://dev.10pm.studio/dawes/cms/api/query',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
-      }
+      },
+      // '^/artists/.*': {
+      //   target: 'https://dawesandco.com/artists',
+      //   changeOrigin: true,
+      //   rewrite: (path) => path.replace(/^\/artists/, ''),
+      // }
     }
   },
 })
