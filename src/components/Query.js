@@ -42,6 +42,8 @@ const query = JSON.stringify(
                             // "categories": "page.categories.split",
                             "url": true,
                             "title": true,
+                            "slug": true,
+                            "caption": "page.caption.inline",
                             "cover": {
                                 "query": "page.cover.toFile",
                                 "select": {

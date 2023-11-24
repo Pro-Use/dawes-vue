@@ -3,10 +3,10 @@
     <main id="main" class="main page-content home-content">
             <header class="site-header">
                 <h1 class="site-title">
-                    <a :href="site_data.all_data.url">
+                    <router-link to="/">
                         <span class="visuallyhidden">{{site_data.all_data.title}}</span>
                         <logo1/>
-                    </a>
+                    </router-link>
                 </h1>
             </header>
             <div id="artists" class="artist-list-wrapper">
@@ -23,7 +23,7 @@
                         </li>
                     </ul>
                     <footer class="home-footer">
-                        <a class="contact-link contact-link-toggle prevent cap" :href="site_data.all_data.contact.id">Contact</a>
+                        <RouterLink to="/contact" class="contact-link contact-link-toggle prevent cap">Contact</RouterLink>
                     </footer>
                 </div>
                 <div class="artist-background-images">
@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <footer class="home-footer">
-                        <a class="contact-link contact-link-toggle prevent cap" :href="site_data.all_data.url">Artists</a>
+                        <RouterLink to="/" class="contact-link contact-link-toggle prevent cap" >Artists</RouterLink>
                     </footer>
             </div>
 

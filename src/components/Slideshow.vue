@@ -1,46 +1,33 @@
 <template>
-	<div v-show="props.album != null" 
-	id="slideshow-wrapper" class="main-wrapper slideshow-wrapper" data-page="container" data-order="2">
-    <button @click="slideshow_close" aria-label="close slideshow" class="slideshow-close-button cap">Close</button>
+	<div id="slideshow-wrapper" class="main-wrapper slideshow-wrapper" data-page="container" data-order="2">
+    <a @click.prevent="slideshow_close" aria-label="close slideshow" class="slideshow-close-button cap">Close</a>
     <div class="slideshow" ref="slideshow">
-        <div v-for="(slide, index) in props.artist.albums[0].slides"
+        <div v-for="(slide, index) in props.artist.albums[album_index].slides"
         	class="slide" :class="slide.slideType">
             <div class="slide-inner">
-                        <div v-if="slide.slideType == 'video'" class="slide-image-container" :class="slide.orientation">
-                            <video
-                                width="500"
-                                height="500"
-                                v-lazyloadvideo
-                                style="width: 100%; height: 100%;"
-                                preload="none"
-                                loop
-                                :data-autoplay="slide.autoplayVideo"
-                                :muted="slide.autoplayVideo"
-                                :data-poster="slide.url"
-                                :alt="slide.alt"
-                                :src="slide.url">
-                            </video>
-                        </div>
-                        <div v-if="slide.slideType == 'vimeo'" class="slide-image-container" :class="slide.orientation">
-                            <div class="video-wrapper" :data-ratio="slide.ratio" :data-orientation="slide.orientation">
-                                <div class="video-wrapper js-player">
-                                    <vue-plyr>
-									  <div class="plyr__video-embed">
-									    <iframe
-									      :src="slide.vimeoLink+'?loop=false&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=0&amp;gesture=media'"
-									      allowfullscreen
-									      allowtransparency
-									      allow="autoplay"
-									    ></iframe>
-									  </div>
-									</vue-plyr>
-                                </div>
-                            </div>
-                        </div>
-                    <div v-else class="slide-image-container" :class="slide.orientation">
-                        <img v-lazyload :data-srcset="slide.srcset" :alt="slide.alt" />
-                        <!-- data-flickity-lazyload-src="<?= $slide->resize(1500)->url();?>" -->
-                    </div>
+                <div v-if="slide.slideType == 'video'" class="slide-image-container" :class="slide.orientation">
+                    <video
+                        width="500"
+                        height="500"
+                        v-lazyloadvideo
+                        style="width: 100%; height: 100%;"
+                        preload="none"
+                        loop
+                        :data-autoplay="slide.autoplayVideo"
+                        :muted="slide.autoplayVideo"
+                        :data-poster="slide.url"
+                        :alt="slide.alt"
+                        :src="slide.url">
+                    </video>
+                </div>
+                <div v-if="slide.slideType == 'vimeo'" class="slide-image-container" :class="slide.orientation">
+                    <VideoWrapper :slide="slide" :dims="dims" 
+                    	:cur_slide="index" :slide_index="slide_index" />
+                </div>
+	            <div v-else class="slide-image-container" :class="slide.orientation">
+	                <img v-lazyload :data-srcset="slide.srcset" :alt="slide.alt" />
+	                <!-- data-flickity-lazyload-src="<?= $slide->resize(1500)->url();?>" -->
+	            </div>
             </div>
         </div>
     </div>
@@ -60,37 +47,24 @@
 </template>
 <script setup>
 	import { useSiteData } from '@/stores/siteData'
-	import { ref, computed, watch, onMounted } from 'vue'
+	import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+	import VideoWrapper from './VideoWrapper.vue'
 	import Flickity from 'flickity'
 
 	const site_data = useSiteData()
 	const props = defineProps(['artist', 'album'])
+	const emit = defineEmits(['close_slideshow'])
 
 	const album_index = ref(props.album)
-	const slide_index = ref(0)
+	const slide_index = ref(1)
 	const slideshow = ref(null)
 	const flickityOptions = {
         prevNextButtons: false,
         pageDots: false,
         wrapAround: true
     }
-    const flickity = null
-
-    console.log(Flickity)
-
-	watch(props, () => {
-		album_index.value = props.album
-		slide_index.value = 0
-		console.log(slideshow.value)
-		// if (flickity === null && slideshow.value){
-		// 	flickity = new Flickity(
-		// 		slideshow.value, flickityOptions
-		// 	)
-		// } else {
-		// 	flickity.reloadCells()
-		// }
-		// console.log(flickity.value)
-	})
+    let flickity = null
+    const dims = ref([])
 
 	const cur_album = computed(()=>{
 		if (!album_index.value){
@@ -100,15 +74,6 @@
 		}
 	})
 
-	// const cur_slide = computed(()=>{
-	// 	if (!album_index.value || !props.artist.albums[album_index.value].slides.length) {
-	// 		return null
-	// 	} else {
-	// 		return props.artist.albums[album_index.value].slides[slide_index.value]
-	// 	}
-	// })
-
-
 	const get_ratio = (slide) => {
 		let ratio = Math.round((slide.height / slide.width * 100))
 		return ratio
@@ -116,24 +81,63 @@
 
 	const slideshow_close = () => {
 		album_index.value = null
+		slide_index.value = 1
+		emit('close_slideshow')
 		// emit close to parent
+
 	}
 
 	const slideshow_next = () => {
-		if (flickity.value){
-			flickety.value.next()
+		if (flickity){
+			flickity.next()
+			slide_index.value = flickity.selectedIndex + 1
 		}
 	}
 	
 	const slideshow_prev = () => {
-		if (flickity.value){
-			flickety.value.prev()
+		if (flickity){
+			flickity.previous()
+			slide_index.value = flickity.selectedIndex + 1
 		}
 	}
+
+	const get_dimensions = () => {
+      const width = document.documentElement.clientWidth;
+      const height = document.documentElement.clientHeight;
+      dims.value =  [width, height]
+    }
+
+    get_dimensions()
+
+	watch(props, () => {
+		if (album_index.value !== props.album){
+			album_index.value = props.album
+			slide_index.value = 0
+			flickity.reloadCells()
+		}
+		
+	})
+
+	onMounted( () => {
+		flickity = new Flickity(
+			slideshow.value, flickityOptions
+		)
+		window.addEventListener('resize', get_dimensions);
+	})
+
+	onUnmounted( () => {
+		window.removeEventListener('resize', get_dimensions);
+	})
+
 </script>
 
 <style scoped>
 	.slideshow-wrapper {
 		z-index: 200;
+		position: fixed;
+	}
+
+	.slideshow-close-button {
+		cursor: pointer;
 	}
 </style>

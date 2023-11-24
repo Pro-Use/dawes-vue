@@ -17,7 +17,7 @@
 	                </div>                
 	            </div>
 	        </header>
-	        	<MultipleContent :artist="artist" />
+	        	<MultipleContent :artist="artist" :album="props.album" />
 <!-- 	            <?php
 	                $display = $page->display();
 	                if($display == 'single'):
@@ -36,7 +36,7 @@
 	                </div>
 	                <footer class="artist-footer page-margins">
 	                    <div class="cap">
-	                        <a :href="site_data.all_data.url">Artists</a> • <a :href="site_data.all_data.contact.url">Contact</a>
+	                        <RouterLink to="/">Artists</RouterLink> • <RouterLink to="/contact">Contact</RouterLink>
 	                    </div>
 	                </footer>
 	            </div>
@@ -47,10 +47,11 @@
 <script setup>
   import { useSiteData } from '@/stores/siteData'
   import { ref, computed } from 'vue'
+
   import MultipleContent from '@/components/MultipleContent.vue'
 
   const site_data = useSiteData()
-  const props = defineProps(['artist'])
+  const props = defineProps(['artist', 'album'])
   const bio = ref(false)
   const bio_button = ref('Bio')
   const bio_display = ref('none')
