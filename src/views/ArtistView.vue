@@ -47,6 +47,7 @@
 <script setup>
   import { useSiteData } from '@/stores/siteData'
   import { ref, computed } from 'vue'
+  import { useRoute, useRouter } from "vue-router";
 
   import MultipleContent from '@/components/MultipleContent.vue'
 
@@ -55,8 +56,12 @@
   const bio = ref(false)
   const bio_button = ref('Bio')
   const bio_display = ref('none')
+  const route = useRoute()
+
+  console.log(route.query)
 
   const artist = computed(() => {
+  	// if route.query re-call kql before returning...
   	return site_data.artists.filter((artist) => artist.slug == props.artist)[0]
   })
 

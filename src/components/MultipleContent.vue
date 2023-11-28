@@ -44,15 +44,12 @@
 	import { useSiteData } from '@/stores/siteData'
 	import Slideshow from './Slideshow.vue'
 	import { ref, onMounted } from 'vue'
-    import { useRoute, useRouter } from "vue-router";
+    import { useRouter } from "vue-router";
 
 	const site_data = useSiteData()
 	const props = defineProps(['artist', 'album'])
 	const cur_album = ref(null)
-    const route = useRoute()
     const router = useRouter()
-
-    console.log(route.query)
 
 	const get_ratio = (cover) => {
 		let ratio = Math.round((cover.height / cover.width * 100))

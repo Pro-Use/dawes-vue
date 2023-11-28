@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite --debug",
     "build": "vite build",
+    "stage": "vite build --mode staging",
     "preview": "vite preview"
   },
   "dependencies": {
