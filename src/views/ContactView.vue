@@ -4,19 +4,19 @@
 	            <header class="site-header">
 	                <h1 class="site-title">
 	                    <router-link to="/">
-	                        <span class="visuallyhidden">{{site_data.all_data.title}}</span>
+	                        <span class="visuallyhidden">{{site_data.site.title}}</span>
 	                        <logo1 />
 	                    </router-link>
 	                </h1>
 	            </header>
 	            <div id="contact" class="contact-wrapper">
 	                    <div class="contact-details">
-	                        <div class="body-content" v-html="site_data.all_data.contact.contact">
+	                        <div class="body-content" v-html="site_data.site.contact.contact">
 	                            
 	                        </div>
 	                    </div>
 	                    <footer class="home-footer">
-	                        <router-link to="/" class="contact-link contact-link-toggle prevent cap">Artists</router-link>
+	                        <router-link to="/" class="contact-link contact-link-toggle prevent cap">Artists</router-link> 
 	                    </footer>
 	            </div>
 

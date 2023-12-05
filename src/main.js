@@ -8,6 +8,7 @@ import LazyLoadDirective from "./directives/LazyLoadDirective";
 import LazyLoadVideoDirective from "./directives/LazyLoadVideoDirective";
 import VuePlyr from 'vue-plyr'
 import 'vue-plyr/dist/vue-plyr.css'
+import Vue3Marquee from 'vue3-marquee'
 
 
 const pinia = createPinia()
@@ -25,6 +26,7 @@ app.use(VuePlyr, {
     	}
    	}
   })
+app.use(Vue3Marquee)
 app.directive('lazyload', LazyLoadDirective);
 app.directive('lazyloadvideo', LazyLoadVideoDirective);
 

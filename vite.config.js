@@ -23,11 +23,11 @@ export default defineConfig(({ command, mode }) => {
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ''),
         },
-        // '^/artists/.*': {
-        //   target: 'https://dawesandco.com/artists',
-        //   changeOrigin: true,
-        //   rewrite: (path) => path.replace(/^\/artists/, ''),
-        // }
+        '/mailing-list-signup': {
+          target: 'https://dev.10pm.studio/dawes/cms/mailing-list-signup',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/mailing-list-signup/, ''),
+        },
       }
     },
   }

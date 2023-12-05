@@ -4,6 +4,8 @@ const query = JSON.stringify(
         "select": {
             "url": true,
             "title": true,
+            "news_on": true,
+            "news_text": "site.news_text.upper()",
             "contact": {
                 "query": "site.children.find('contact')",
                 "select": {

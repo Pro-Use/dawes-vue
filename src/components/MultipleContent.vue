@@ -8,7 +8,7 @@
                     {{artist.placehholder}}
                 </div>
             <ul class="artist-index-grid">
-                <li v-for="(album, index) in artist.albums" class="album">
+                <li v-for="(album, index) in props.artist.albums" class="album">
                     <a @click.prevent="cur_album = index" class="album-link" :class="[album.cover.orientation, album.cover.type]">
                                 <div v-if="album.cover && album.cover.slideType == 'video'" class="image-wrapper" 
                                 	:style="{ 'padding-bottom': get_ratio(album.cover) + '%' }">
@@ -38,15 +38,15 @@
                 </div>
             </footer>
         </section>
-        <Slideshow v-if="cur_album !== null" :artist="props.artist" :album="cur_album" @close_slideshow="close_slideshow"/>    
+        <transition name="slide">
+            <Slideshow v-if="cur_album !== null" :artist="props.artist" :album="cur_album" @close_slideshow="close_slideshow"/>
+        </transition>  
 </template>
 <script setup>
-	import { useSiteData } from '@/stores/siteData'
 	import Slideshow from './Slideshow.vue'
 	import { ref, onMounted } from 'vue'
     import { useRouter } from "vue-router";
 
-	const site_data = useSiteData()
 	const props = defineProps(['artist', 'album'])
 	const cur_album = ref(null)
     const router = useRouter()
@@ -81,5 +81,14 @@
 <style scoped>
     .album-link {
         cursor: pointer;
+    }
+
+    .slide-enter-active,
+    .slide-leave-active {
+      transition: top 0.5s;
+    }
+    .slide-enter-from,
+    .slide-leave-to {
+      top: 100vh;
     }
 </style>

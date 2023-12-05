@@ -47,7 +47,7 @@
 </template>
 <script setup>
 	import { useSiteData } from '@/stores/siteData'
-	import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+	import { ref, computed, watch, onMounted, onUnmounted, inject } from 'vue'
 	import VideoWrapper from './VideoWrapper.vue'
 	import Flickity from 'flickity'
 
@@ -65,6 +65,7 @@
     }
     let flickity = null
     const dims = ref([])
+    const slideshow_open = inject('slideshow_open')
 
 	const cur_album = computed(()=>{
 		if (!album_index.value){
@@ -123,10 +124,12 @@
 			slideshow.value, flickityOptions
 		)
 		window.addEventListener('resize', get_dimensions);
+		slideshow_open.value = true
 	})
 
 	onUnmounted( () => {
 		window.removeEventListener('resize', get_dimensions);
+		slideshow_open.value = false
 	})
 
 </script>

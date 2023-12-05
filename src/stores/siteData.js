@@ -1,40 +1,64 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import Query from '@/components/Query.js'
+import SiteQuery from '@/queries/SiteQuery.js'
+import ArtistQuery from '@/queries/ArtistQuery.js'
+import NewsQuery from '@/queries/NewsQuery.js'
 
 export const useSiteData = defineStore('siteData', () => {
 
 	const api = import.meta.env.VITE_API_ENDPOINT
 
-	const all_data = ref(null)
+	const site = ref(null)
+	const artists = ref([])
+	const news = ref(null)
 
 	const init_data = async () => {
 		const res = await fetch(api, {
 		    method: "post",
-		    body: Query.query
+		    body: SiteQuery.query()
 		})
 		const json = await res.json()
-		all_data.value = json.result
+		site.value = json.result
 		console.log(json.result)
+		if (site.value.artists){
+			site.value.artists.forEach((artist) => {
+				init_artist(artist.slug)
+			})
+		}
+
+		init_news()
+
+	}
+
+	const init_artist = async (artist) => {
+		const res = await fetch(api, {
+		    method: "post",
+		    body: ArtistQuery.query(artist)
+		})
+		const json = await res.json()
+		// console.log(json.result)
+		artists.value.push(json.result)
+	}
+
+	const init_news = async () => {
+		const res = await fetch(api, {
+		    method: "post",
+		    body: NewsQuery.query()
+		})
+		const json = await res.json()
+		console.log(json.result)
+		news.value = json.result
 	}
 
 	const site_children = computed(()=> {
-		if (all_data.value){
-			return all_data.value.children
-		} else {
-			return []
-		}
-	})
-
-	const artists = computed(()=> {
-		if (all_data.value){
-			return all_data.value.artists
+		if (site.value){
+			return site.value.children
 		} else {
 			return []
 		}
 	})
 
 	return { 
-		all_data, init_data, site_children, artists
+		site, init_data, site_children, artists, news
 	  }
 })

@@ -1,23 +1,21 @@
 <template>
-	<div class="main-wrapper" data-page="container" data-order="1">
+	<div v-if="artist" class="main-wrapper" data-page="container" data-order="1">
 	    <main id="main" class="main artist-content">
 	        <header class="artist-header">
 	            <div class="artist-header-inner">
 	                <h1 class="page-title artist-title">
-	                    <a :href="site_data.all_data.url">
-	                        {{artist.title}}
-	                    </a>
+	                    <RouterLink to="/">{{artist.title}}</RouterLink>
 	                </h1>
 	                <p class="artist-cat mono cap">{{artist.caption}}</p>
 	                <div class="bio-link-wrapper xs-hide sm-show page-margins cap">
 	                    <a href="#bio" @click="toggle_bio" class="bio-link">{{bio_button}}</a>
 	                </div>
 	                <div class="back-link-wrapper xs-hide sm-show page-margins cap">
-	                    <a :href="site_data.all_data.url" class="back-link">Back</a>
+	                     <RouterLink to="/" class="back-link">Back</RouterLink>
 	                </div>                
 	            </div>
 	        </header>
-	        	<MultipleContent :artist="artist" :album="props.album" />
+	        	<MultipleContent v-if="artist_full" :artist="artist_full" :album="props.album" />
 <!-- 	            <?php
 	                $display = $page->display();
 	                if($display == 'single'):
@@ -46,23 +44,56 @@
 </template>
 <script setup>
   import { useSiteData } from '@/stores/siteData'
-  import { ref, computed } from 'vue'
+  import { ref, computed, onMounted } from 'vue'
   import { useRoute, useRouter } from "vue-router";
-
+  import ArtistQuery from '@/queries/ArtistQuery.js'
   import MultipleContent from '@/components/MultipleContent.vue'
 
+  const api = import.meta.env.VITE_API_ENDPOINT
   const site_data = useSiteData()
   const props = defineProps(['artist', 'album'])
   const bio = ref(false)
   const bio_button = ref('Bio')
   const bio_display = ref('none')
   const route = useRoute()
+  const token = route.query.token
+  const artist_drafts = ref(null)
 
-  console.log(route.query)
+  
+  onMounted( async() => {
+  	if (token){
+  		const res = await fetch(api, {
+		    method: "post",
+		    body: ArtistQuery.query(props.artist, 'draft')
+			})
+			const json = await res.json()
+			console.log(json)
+			artist_drafts.value = json.result
+  	}
+  })
 
   const artist = computed(() => {
   	// if route.query re-call kql before returning...
-  	return site_data.artists.filter((artist) => artist.slug == props.artist)[0]
+  	console.log(site_data.site.artists)
+  	const filtered = site_data.site.artists.filter((artist) => artist.slug == props.artist)
+  	if (filtered.length){
+  		return filtered[0]
+  	} else {
+  		return null
+  	}
+  })
+
+  const artist_full = computed(() => {
+  	if (artist_drafts.value){
+  		return artist_drafts.value
+  	}
+  	// if route.query re-call kql before returning...
+  	const filtered = site_data.artists.filter((artist) => artist.slug == props.artist)
+  	if (filtered.length){
+  		return filtered[0]
+  	} else {
+  		return null
+  	}
   })
 
   const toggle_bio = () => {

@@ -1,7 +1,7 @@
 <template>
 	<nav class="main-menu" :class="{'menu--open': responsive_menu}">
     <details>
-      <summary @click="toggle_menu()" id="menu-toggle-button" 
+      <summary v-show="!slideshow_open" @click="toggle_menu()" id="menu-toggle-button" 
         class="button menu-toggle-button"
         :aria-expanded="expanded">
         <span class="visuallyhidden">Main Menu</span>
@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-  import { ref, computed } from 'vue'
+  import { ref, computed, inject } from 'vue'
   import { useRouter } from 'vue-router'
 	import { useSiteData } from '@/stores/siteData'
  
@@ -35,6 +35,7 @@
   const responsive_menu = ref(false)
   const router = useRouter()
   const close = ref('null')
+  const slideshow_open = inject('slideshow_open')
 
   const expanded = computed(()=>{
     return String(responsive_menu.value)
