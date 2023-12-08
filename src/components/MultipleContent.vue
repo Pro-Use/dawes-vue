@@ -9,7 +9,7 @@
                 </div>
             <ul class="artist-index-grid">
                 <li v-for="(album, index) in props.artist.albums" class="album">
-                    <a @click.prevent="cur_album = index" class="album-link" :class="[album.cover.orientation, album.cover.type]">
+                    <a v-if="album.cover" @click.prevent="cur_album = index" class="album-link" :class="[album.cover.orientation, album.cover.type]">
                                 <div v-if="album.cover && album.cover.slideType == 'video'" class="image-wrapper" 
                                 	:style="{ 'padding-bottom': get_ratio(album.cover) + '%' }">
                                         <video v-if="album.cover.src"
