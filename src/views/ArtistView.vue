@@ -42,10 +42,11 @@
 	    </main>
 	</div>
 </template>
+
 <script setup>
   import { useSiteData } from '@/stores/siteData'
   import { ref, computed, onMounted } from 'vue'
-  import { useRoute, useRouter } from "vue-router";
+  import { useRoute } from "vue-router";
   import ArtistQuery from '@/queries/ArtistQuery.js'
   import MultipleContent from '@/components/MultipleContent.vue'
 
@@ -57,10 +58,13 @@
   const bio_display = ref('none')
   const route = useRoute()
   const token = route.query.token
-  const artist_drafts = ref(null)
+  const artist_unpublished = ref(null)
+
+  console.log(route)
 
   
   onMounted( async() => {
+  	// Handle Draft
   	if (token){
   		const res = await fetch(api, {
 		    method: "post",
@@ -68,24 +72,42 @@
 			})
 			const json = await res.json()
 			console.log(json)
-			artist_drafts.value = json.result
+			artist_unpublished.value = json.result
+  	} else {
+  		// Handle unlisted
+  		const in_artists = site_data.site.artists.find((artist) => props.artist == artist.slug)
+  		if (!in_artists){
+  			const res = await fetch(api, {
+			    method: "post",
+			    body: ArtistQuery.query(props.artist, 'listed')
+				})
+				const json = await res.json()
+				console.log(json)
+				if (json.result != null){
+					artist_unpublished.value = json.result
+				}
+  		}
   	}
   })
 
   const artist = computed(() => {
   	// if route.query re-call kql before returning...
-  	console.log(site_data.site.artists)
-  	const filtered = site_data.site.artists.filter((artist) => artist.slug == props.artist)
-  	if (filtered.length){
-  		return filtered[0]
+  	if (artist_unpublished.value && artist_full.value){
+  		return artist_full.value
   	} else {
-  		return null
-  	}
+	  	console.log(site_data.site.artists)
+	  	const filtered = site_data.site.artists.filter((artist) => artist.slug == props.artist)
+	  	if (filtered.length){
+	  		return filtered[0]
+	  	} else {
+	  		return null
+	  	}
+	  }
   })
 
   const artist_full = computed(() => {
-  	if (artist_drafts.value){
-  		return artist_drafts.value
+  	if (artist_unpublished.value){
+  		return artist_unpublished.value
   	}
   	// if route.query re-call kql before returning...
   	const filtered = site_data.artists.filter((artist) => artist.slug == props.artist)
