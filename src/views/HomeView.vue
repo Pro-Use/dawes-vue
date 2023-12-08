@@ -51,7 +51,7 @@
 
 <script setup>
   import { useSiteData } from '@/stores/siteData'
-  import { ref, computed, onMounted, onUnmounted } from 'vue'
+  import { ref, computed } from 'vue'
   import { RouterLink } from 'vue-router'
   import logo1 from '@/components/icons/logo1.vue'
   import Ticker from '@/components/Ticker.vue'
