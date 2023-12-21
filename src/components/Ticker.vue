@@ -10,7 +10,7 @@
 		          :autoWidth="true"
 		        > -->
 		        <div class="ticker-item" v-for="index in 2">
-		            NEWS: {{ site_data.site.news_text }} <span class="more-news"> • MORE NEWS  • </span>
+					<span class="more-news">• NEWS •</span>{{ site_data.site.news_text }}
 		        </div>
 		        <!-- </vue-marquee-slider> -->
 		    </Vue3Marquee>
