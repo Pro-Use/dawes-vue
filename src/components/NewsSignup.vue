@@ -1,7 +1,7 @@
 <template>
     <section id="email-signup" class="signup-form">
         <div class="signup-container cap">
-            <p class="cap">
+            <p class="cap signup-text">
                 Sign up to our newsletter for updates, news and announcements
             </p>
             <div class="signup">
@@ -50,6 +50,13 @@
 </script>
 
 <style scoped>
+
+.signup-text{
+  font-size: 22px;
+  font-family: "Monument-Semi-Mono", monospace;
+  margin: 0 auto 0;
+  max-width: 536px;
+}
 .signup-form {
       padding: 0 3.5em 3.5em;
       font-size: 1em;
@@ -64,17 +71,19 @@
     }
 
     .signup {
-      margin: 1.6em 0;
+      margin: 1.6em auto 0;
+      border: black solid 2px;
+      max-width: 475px;
     }
 
     .email-input {
-        font-size: 1em;
+        font-size: 22px;
         width: 100%;
-        border: black solid 2px;
-        font-family: "Monument","Helvetica",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans",sans-serif;
+        font-family: "Monument-Semi-Mono", monospace;
         line-height: 1.2;
-        height: 54px;
+        height: 50px;
         padding-left: 10px;
+        border: 0px;
     }
 
     .email-input:focus-visible {
@@ -83,13 +92,14 @@
 
     .email-submit {
           width: 100%;
-          height: 54px;
+          height: 50px;
           background-color: white;
-          border: 2px solid black;
-          border-top: none;
-          font-family: "Monument","Helvetica",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans",sans-serif;
+          border: 0px solid black;
+          border-top: 2px solid black;
+          font-size: 22px;
+          width: 100%;
+          font-family: "Monument-Semi-Mono", monospace;          
           line-height: 1.2;
-          font-size: 1em;
           cursor: pointer;
         }
 
@@ -129,15 +139,16 @@
           min-height: 100vh;
         }
 
-        .email-submit {
-          width: 33%;
-          border-left: none;
-          border-top: black solid 2px;
+        .signup{
+          display: grid;
+          grid-template-columns: 1fr 150px;
         }
 
-        .email-input {
-            width: 66%;
+        .email-submit {
+          border-top: 0px;
+          border-left: 2px solid black;
         }
+
     }
 	
 </style>

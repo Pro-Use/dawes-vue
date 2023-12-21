@@ -24,7 +24,7 @@
                                 height="500"
                                 v-lazyloadvideo
                                 preload="none"
-                                muted=""
+                                muted
                                 loop
                                 playsinline 
                                 data-autoplay=""
