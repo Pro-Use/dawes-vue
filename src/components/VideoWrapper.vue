@@ -7,6 +7,7 @@
 			    <iframe
 			      :src="get_vimeo_url(slide.vimeoLink)"
 			      allowfullscreen
+				  muted
 			      allowtransparency
 			      allow="autoplay"
 			    ></iframe>
@@ -32,7 +33,7 @@
 		let id = url_array.pop()
 		console.log(id)
 		return 'https://player.vimeo.com/video/' + id +
-			'?loop=false&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=0&amp;gesture=media'
+			'?loop=false&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=0&amp;gesture=media&amp;muted=true'
 	}
 
 	watch(props, () => {

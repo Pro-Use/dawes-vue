@@ -1,7 +1,7 @@
 <template>
 	<div class="ticker-container">
-		<RouterLink to='news'>
-			<div class="ticker-wrapper" :style="{'margin-bottom':ticker_top+'px', 'rotate': ticker_rotation}">
+		<RouterLink to='news' class="ticker-link">
+			<div class="ticker-wrapper">
 				<Vue3Marquee :duration="80">
 <!-- 		        <vue-marquee-slider
 		          id="marquee-slider"
@@ -10,7 +10,7 @@
 		          :autoWidth="true"
 		        > -->
 		        <div class="ticker-item" v-for="index in 2">
-		            NEWS: {{ site_data.site.news_text }} <span class="more-news"> • MORE NEWS  • </span>
+					<span class="more-news">• NEWS •</span>{{ site_data.site.news_text }}
 		        </div>
 		        <!-- </vue-marquee-slider> -->
 		    </Vue3Marquee>
@@ -48,37 +48,57 @@
 	
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+
+	.ticker-link{
+		color: #fff;
+		display: block;
+		&:hover{
+			color: #FF5C00
+		}
+	}
     .ticker-item {
       flex-shrink: 0;
-      color: #FF5C00;
-      font-size: 45px;
+	  font-size: 28px;
     }
 
     .ticker-wrapper {
+		background-color: #FF5C00;
         z-index: 50;
-        position: relative;
-        background: white;
-        padding: 5px 0px;
-        border: #FF5C00 solid 2px;
+        position: absolute;
+		bottom: 70px;
+        padding: 3px 0px;
+        // border: #FF5C00 solid 2px;
         width: 140%;
         left: -20%;
-        margin-bottom: 50px;
     }
+
+	a:hover .ticker-wrapper{
+		background-color: #fff;
+	}
 
     .more-news {
-    	font-size: 22px;
+		font-size: 15px;
     	vertical-align: middle;
-    	padding:0 15px ;
+    	padding:0 15px;
+		margin-top: -2px;
+		display: inline-block;
+		font-family: "Monument-Semi-Mono",monospace;
     }
 
-    @media only screen and (max-width: 600px){
+    @media only screen and (min-width: 768px){
     	.ticker-item {
-    		font-size: 16px;
+    		font-size: 45px;
     	}
-
 		.more-news {
-			font-size: 10px;
+			font-size: 22px;
+			margin-top: -5px;
 		}    	
     }
+
+	@media only screen and (min-width: 1200px){
+		.ticker-wrapper {
+			bottom: 90px;
+		}
+	}
 </style>
