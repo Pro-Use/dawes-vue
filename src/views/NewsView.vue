@@ -11,9 +11,6 @@
 	                </div>                
 	            </div>
 	        </header>
-            
-            <NewsSignup/>
-
 	        <section id="images" class="news-index">
             <ul v-if="news" class="artist-index-grid">
                 <li v-for="(album, index) in news" class="album">
@@ -42,6 +39,7 @@
                     <span class="album-caption mono cap" style="opacity: 1;" v-html="album.caption"></span>
                 </li>        
             </ul>
+            <NewsSignup/>
             <footer class="artist-footer page-margins">
                 <div class="cap">
                     <RouterLink to="/" >Artists</RouterLink> • <RouterLink to="/Contact">Contact</RouterLink>
@@ -94,7 +92,7 @@
 </script>
 <style scoped>
     .news-index {
-      padding: 0 3.5em 3.5em;
+      padding: 160px 3.5em 3.5em;
     }
 
     
