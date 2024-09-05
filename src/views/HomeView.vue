@@ -28,7 +28,7 @@
                     </footer>
                 </div>
                 <div class="artist-background-images">
-                    <div v-for="(artist,a_index) in site_data.artists" class="image-group">
+                    <div v-for="(artist,a_index) in site_data.site.artists" class="image-group" :data-artist="artist.title">
                             <img class="artist-background-image" :style="{ display: cover_visible[a_index]}" 
                             :srcset="get_cover(a_index)" aria-hidden="true"/>
                     </div>
@@ -64,8 +64,8 @@
     if (!site_data) {
       return null
     } else {
-      let covers = site_data.artists[i].covers
-      let rand_cover = covers[Math.floor(Math.random() * covers.length)]
+      let covers = site_data.site.artists[i].covers
+      let rand_cover = covers[0]
       return rand_cover.srcset
     }
   }

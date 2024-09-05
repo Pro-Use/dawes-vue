@@ -3,9 +3,9 @@
   <div v-if="site_data.site" data-page="wrapper" class="site-wrapper">
     <a href="#main" class="skip-to-content">Skip to content</a>
     <Nav/>
-    <RouterView v-slot="{ Component }">
+    <RouterView v-slot="{ Component, route }">
       <transition
-        :name="get_trans"
+        :name="route.meta.transition"
         >
         <component :is="Component" />
       </transition>
@@ -15,7 +15,7 @@
 
 <script setup>
 import { RouterView, useRoute } from 'vue-router'
-import { onMounted, computed, provide, ref } from 'vue'
+import { onMounted, computed, provide, ref, onBeforeUnmount } from 'vue'
 import { useSiteData } from '@/stores/siteData'
 import Header from './components/Header.vue'
 import Nav from './components/Nav.vue'
@@ -30,16 +30,6 @@ onMounted( async() => {
   await site_data.init_data()
 })
 
-const get_trans = computed(() => {
-  console.log(route.name)
-  if (route.name == 'home'){
-    return 'slidedown'
-  } else if (route.name =='artist'){
-    return 'slideup'
-  } else {
-    return 'none'
-  }
-})
 
 </script>
 

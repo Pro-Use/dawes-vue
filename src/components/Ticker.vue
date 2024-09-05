@@ -10,7 +10,8 @@
 		          :autoWidth="true"
 		        > -->
 		        <div class="ticker-item" v-for="index in 2">
-					<span class="more-news">• NEWS •</span>{{ site_data.site.news_text }}
+					<span class="more-news">NEWS</span>
+					<span v-html="site_data.site.news_text"></span>
 		        </div>
 		        <!-- </vue-marquee-slider> -->
 		    </Vue3Marquee>
@@ -60,6 +61,11 @@
     .ticker-item {
       flex-shrink: 0;
 	  font-size: 28px;
+	  line-height: 1;
+	  padding-top: 1px;
+	  span{
+		display: inline-block;
+	  }
     }
 
     .ticker-wrapper {
@@ -89,6 +95,7 @@
     @media only screen and (min-width: 768px){
     	.ticker-item {
     		font-size: 45px;
+			padding-top: 1px;
     	}
 		.more-news {
 			font-size: 22px;

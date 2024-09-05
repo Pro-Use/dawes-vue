@@ -26,7 +26,6 @@
                 </div>
 	            <div v-else class="slide-image-container" :class="slide.orientation">
 	                <img v-lazyload :data-srcset="slide.srcset" :alt="slide.alt" />
-	                <!-- data-flickity-lazyload-src="<?= $slide->resize(1500)->url();?>" -->
 	            </div>
             </div>
         </div>
@@ -38,9 +37,9 @@
         <span class="visuallyhidden">Next Image</span>
     </button>
     <footer class="slideshow-footer cap mono">
-        <div v-if="cur_album" class="slideshow-caption">
-            <span class=""> {{cur_album.caption}} &mdash;</span> <span id="count">{{slide_index}}</span>/
-            <span id="total">{{cur_album.slides.length}}</span>
+        <div class="slideshow-caption">
+            <span v-if="props.artist.albums[album_index].caption" class="" v-html="props.artist.albums[album_index].caption"></span> &mdash; 
+			<span id="count">{{slide_index}}</span>/<span v-if="props.artist.albums[album_index].slides"  id="total">{{props.artist.albums[album_index].slides.length}}</span>
         </div>
     </footer>
 </div>
@@ -54,6 +53,8 @@
 	const site_data = useSiteData()
 	const props = defineProps(['artist', 'album'])
 	const emit = defineEmits(['close_slideshow'])
+
+	const cur_album_ref = ref(null)
 
 	const album_index = ref(props.album)
 	const slide_index = ref(1)
@@ -91,14 +92,14 @@
 	const slideshow_next = () => {
 		if (flickity){
 			flickity.next()
-			slide_index.value = flickity.selectedIndex + 1
+			// slide_index.value = flickity.selectedIndex + 1
 		}
 	}
 	
 	const slideshow_prev = () => {
 		if (flickity){
 			flickity.previous()
-			slide_index.value = flickity.selectedIndex + 1
+			// slide_index.value = flickity.selectedIndex + 1
 		}
 	}
 
@@ -123,6 +124,9 @@
 		flickity = new Flickity(
 			slideshow.value, flickityOptions
 		)
+		flickity.on( 'change', function( index ) {
+			slide_index.value = flickity.selectedIndex + 1
+		});
 		window.addEventListener('resize', get_dimensions);
 		slideshow_open.value = true
 	})
