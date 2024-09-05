@@ -5,6 +5,7 @@ import HomeView from '../views/HomeView.vue'
 import ArtistView from '../views/ArtistView.vue'
 import ContactView from '../views/ContactView.vue'
 import NewsView from '../views/NewsView.vue'
+import NotFound from '../views/NotFound.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,11 +41,15 @@ const router = createRouter({
       path: '/news/:item',
       name: 'newsitem',
       component: NewsView
-    }
+    },
+    {
+      path: "/:notFound",
+      component: NotFound,
+    },
   ]
 })
 
-router.afterEach((to) => {
+router.afterEach((to, from) => {
   const site_data = useSiteData()
   let slug = 'artists'
   if (to.name == 'home'){
@@ -56,6 +61,15 @@ router.afterEach((to) => {
   } else if (to.name == 'artist' || to.name == 'album' ){
     slug = to.params.artist
   }
+  if(from.name == 'home' && to.name == 'artist' || from.name == 'home' && to.name == 'news'){
+      to.meta.transition = 'slideup'
+  }
+  else if(from.name == 'artist' && to.name == 'home' || from.name == 'news' && to.name == 'home'){
+    to.meta.transition = 'slidedown'
+  }else{
+    to.meta.transition = 'none'
+  }
+
   console.log(site_data.page_metas[slug])
   useHead({
       title: () => site_data.meta_titles[slug] ? site_data.meta_titles[slug] : 'Dawes & Co'

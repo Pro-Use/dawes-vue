@@ -1,36 +1,50 @@
 <template>
 	<section id="images" class="artist-index">
-            <div class="filters mono cap">
-<!--                 <button v-for="(category, index) in artist.categories.split()" class="filter-button button" :aria-label="'Only Show '+category" :data-filter="'filter-'+category">{{ category }}</button>
-                <span v-if="index == (artist.categories.length - 1)">•</span> -->
+            <div v-if="artist.placeholder != ''" class="filters mono cap" v-html="artist.placeholder">
             </div>
-                <div v-if="artist.placeholder && artist.placeholder != ''" class="filters mono cap">
-                    {{artist.placehholder}}
-                </div>
+            <div v-else-if="artist.categories != ''" class="filters mono cap">
+                <template  v-for="(category, index) in artist.categories">
+                    <button 
+                        @click="toggleFilter(category)" 
+                        :class="selectedFilter == category ? 'selected' : ''"
+                        class="filter-button button" 
+                        :aria-label="'Only Show '+category" :data-filter="'filter-'+category">
+                        {{ category }}
+                    </button>
+                    <span v-if="index != (artist.categories.length - 1)"> • </span>
+                </template>
+            </div>
+
+
             <ul class="artist-index-grid">
-                <li v-for="(album, index) in props.artist.albums" class="album">
-                    <a v-if="album.cover" @click.prevent="cur_album = index" class="album-link" :class="[album.cover.orientation, album.cover.type]">
-                                <div v-if="album.cover && album.cover.slideType == 'video'" class="image-wrapper" 
-                                	:style="{ 'padding-bottom': get_ratio(album.cover) + '%' }">
-                                        <video v-if="album.cover.src"
-                                            width="500"
-                                            height="500"
-                                            v-lazyloadvideo
-                                            preload="none"
-                                            muted=""
-                                            loop
-                                            playsinline 
-                                            data-autoplay=""
-                                            :alt="album.title"
-                                            :src="album.cover.src.url"
-                                        ></video>
-                                </div>
-                                <div v-else class="image-wrapper" :style="{ 'padding-bottom': get_ratio(album.cover) + '%' }">
-                                    <img v-lazyload :data-srcset="album.cover.srcset"  :alt="album.title"/>
-                                </div>
-                        <span class="album-caption mono cap">{{album.title}}</span>
-                    </a>
-                </li>        
+                <template v-for="(album, index) in props.artist.albums">
+                    <li
+                        v-if="selectedFilter == 'all' || album.categories.includes(selectedFilter)"
+                        class="album" 
+                        :class="album.categories">
+                        <a v-if="album.cover" @click.prevent="cur_album = index" class="album-link" :class="[album.cover.orientation, album.cover.type]">
+                                    <div v-if="album.cover && album.cover.slideType == 'video'" class="image-wrapper" 
+                                        :style="{ 'padding-bottom': get_ratio(album.cover) + '%' }">
+                                            <video v-if="album.cover.src"
+                                                width="500"
+                                                height="500"
+                                                v-lazyloadvideo
+                                                preload="none"
+                                                muted=""
+                                                loop
+                                                playsinline 
+                                                data-autoplay=""
+                                                :alt="album.title"
+                                                :src="album.cover.src.url"
+                                            ></video>
+                                    </div>
+                                    <div v-else class="image-wrapper" :style="{ 'padding-bottom': get_ratio(album.cover) + '%' }">
+                                        <img v-lazyload :data-srcset="album.cover.srcset"  :alt="album.title"/>
+                                    </div>
+                            <span class="album-caption mono cap">{{album.title}}</span>
+                        </a>
+                    </li>  
+                </template>      
             </ul>
             <footer class="artist-footer page-margins">
                 <div class="cap">
@@ -51,6 +65,8 @@
 	const cur_album = ref(null)
     const router = useRouter()
 
+    const selectedFilter = ref('all')
+
 	const get_ratio = (cover) => {
 		let ratio = Math.round((cover.height / cover.width * 100))
 		return ratio
@@ -61,6 +77,16 @@
         if(props.album != null){
             router.push('/'+props.artist.id)
         }
+    }
+
+    function toggleFilter(category){
+        console.log(selectedFilter.value)
+        if(selectedFilter.value == category){
+            selectedFilter.value = 'all'
+        }else{
+            selectedFilter.value = category
+        }
+        // console.log(selectedFilter.value)
     }
 
     onMounted(() =>{
@@ -81,6 +107,10 @@
 <style scoped>
     .album-link {
         cursor: pointer;
+    }
+
+    button.selected{
+        text-decoration: underline;
     }
 
     .slide-enter-active,

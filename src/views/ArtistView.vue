@@ -16,15 +16,7 @@
 	            </div>
 	        </header>
 	        	<MultipleContent v-if="artist_full" :artist="artist_full" :album="props.album" />
-<!-- 	            <?php
-	                $display = $page->display();
-	                if($display == 'single'):
-	                    snippet('single-content', ['page' => $page]);
-	                else:
-	                    snippet('multiple-content', ['page' => $page]);
-	                endif;
-	            ?> -->
-	        <section id="bio" class="artist-bio" :style="{display: bio_display}">  
+	        <section id="bio" class="artist-bio"  :class="bio ? 'active' : 'inactive'">  
 	            <div class="bio-inner">
 	                <div class="bio-grid page-margins body-content">
 	                        <div class="artist-bio-text rte" v-html="artist.biography">
@@ -41,12 +33,13 @@
 	        </section>
 	    </main>
 	</div>
+
 </template>
 
 <script setup>
   import { useSiteData } from '@/stores/siteData'
   import { ref, computed, onMounted } from 'vue'
-  import { useRoute } from "vue-router";
+  import { useRoute, useRouter } from "vue-router";
   import ArtistQuery from '@/queries/ArtistQuery.js'
   import MultipleContent from '@/components/MultipleContent.vue'
 
@@ -57,6 +50,7 @@
   const bio_button = ref('Bio')
   const bio_display = ref('none')
   const route = useRoute()
+  const router = useRouter()
   const token = route.query.token
   const artist_unpublished = ref(null)
 
@@ -88,6 +82,9 @@
 				}
   		}
   	}
+	if(artist.value == null){
+		router.push('/error')
+	}
   })
 
   const artist = computed(() => {
@@ -130,3 +127,23 @@
   	}
   }
 </script>
+
+<style scoped>
+
+
+@media screen and (max-width: 600px) {
+	.active, .inactive{
+		display: block;
+	}
+}
+
+@media screen and (min-width: 600px) {
+	.active{
+		display: block;
+	}
+	.inactive{
+		display: none;
+	}
+}
+
+</style>

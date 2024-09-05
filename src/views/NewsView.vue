@@ -1,6 +1,6 @@
 <template>
 	<div class="main-wrapper" data-page="container" data-order="1">
-	    <main id="main" class="main artist-content">
+	    <main id="main" class="main news-content">
 	        <header class="artist-header">
 	            <div class="artist-header-inner">
 	                <h1 class="page-title artist-title">
@@ -15,39 +15,39 @@
             <NewsSignup/>
 
 	        <section id="images" class="news-index">
-            <ul v-if="news" class="artist-index-grid">
-                <li v-for="(album, index) in news" class="album">
-                    <div v-if="album.cover && album.cover.slideType == 'video'" class="image-wrapper" 
-                    	:style="{ 'padding-bottom': get_ratio(album.cover) + '%' }">
-                            <video v-if="album.cover.src"
-                                width="500"
-                                height="500"
-                                v-lazyloadvideo
-                                preload="none"
-                                muted
-                                loop
-                                playsinline 
-                                data-autoplay=""
-                                :alt="album.title"
-                                :src="album.cover.src.url"
-                            ></video>
-                    </div>
-                    <div v-if="album.cover.slideType == 'vimeo'" class="slide-image-container" :class="album.cover.orientation">
-                        <VideoWrapper :slide="album.cover" />
-                    </div>
-                    <div v-else class="image-wrapper" :style="{ 'padding-bottom': get_ratio(album.cover) + '%' }">
-                        <img v-lazyload :data-srcset="album.cover.srcset"  :alt="album.title"/>
-                    </div>
-                    <span class="album-caption mono cap" style="opacity: 1;">{{album.date}}</span>
-                    <span class="album-caption mono cap" style="opacity: 1;" v-html="album.caption"></span>
-                </li>        
-            </ul>
+                <ul v-if="news" class="artist-index-grid" :class="'col-'+ site_data.site.display_columns">
+                    <li v-for="(album, index) in news" class="album">
+                        <div v-if="album.cover && album.cover.slideType == 'video'" class="image-wrapper" 
+                            :style="{ 'padding-bottom': get_ratio(album.cover) + '%' }">
+                                <video v-if="album.cover.src"
+                                    width="500"
+                                    height="500"
+                                    v-lazyloadvideo
+                                    preload="none"
+                                    muted
+                                    loop
+                                    playsinline 
+                                    data-autoplay=""
+                                    :alt="album.title"
+                                    :src="album.cover.src.url"
+                                ></video>
+                        </div>
+                        <div v-if="album.cover.slideType == 'vimeo'" class="slide-image-container" :class="album.cover.orientation">
+                            <VideoWrapper :slide="album.cover" />
+                        </div>
+                        <div v-else class="image-wrapper" :style="{ 'padding-bottom': get_ratio(album.cover) + '%' }">
+                            <img v-lazyload :data-srcset="album.cover.srcset"  :alt="album.title"/>
+                        </div>
+                        <span class="album-caption mono cap" style="opacity: 1;">{{album.date}}</span>
+                        <span class="album-caption mono cap" style="opacity: 1;" v-html="album.caption"></span>
+                    </li>        
+                </ul>
+            </section>
             <footer class="artist-footer page-margins">
                 <div class="cap">
                     <RouterLink to="/" >Artists</RouterLink> • <RouterLink to="/Contact">Contact</RouterLink>
                 </div>
             </footer>
-        </section>
 	    </main>
 	</div>
 </template>
@@ -97,7 +97,39 @@
       padding: 0 3.5em 3.5em;
     }
 
-    
+    .main{
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 0;
+        position: static;
+    }
+
+    .news-index{
+        flex: 1;
+    }
+
+
+    @media screen and (min-width: 1200px) {
+            
+        .artist-index-grid.col-one {
+            grid-template-columns: repeat(1,1fr);
+            max-width: 700px;
+            margin: 0 auto;
+            gap: 80px;
+        }
+
+        .artist-index-grid.col-two {
+            grid-template-columns: repeat(2,1fr);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .artist-index-grid.col-three {
+            grid-template-columns: repeat(3,1fr);
+        }
+        
+    }
 
 
 </style>

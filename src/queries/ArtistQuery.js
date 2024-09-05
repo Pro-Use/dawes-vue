@@ -15,7 +15,7 @@ const query = (artist, status='listed') =>{
             "display": true,
             "biography": true,
             "contact": true,
-            "categories": true,
+            "categories": "page.categories.split",
             "placeholder": true,
             "covers": {
                 "query": "page.cover.toFiles",
@@ -26,7 +26,7 @@ const query = (artist, status='listed') =>{
             "albums":{
                 "query": `page.children${findMod}.template('slideshow')`,
                 "select": {
-                    // "categories": "page.categories.split",
+                    "categories": "page.categories.split",
                     "url": true,
                     "title": true,
                     "slug": true,

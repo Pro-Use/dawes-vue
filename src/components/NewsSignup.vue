@@ -57,6 +57,15 @@
   margin: 0 auto 0;
   max-width: 536px;
 }
+
+.signup-confirm{
+  font-size: 22px;
+  font-family: "Monument-Semi-Mono", monospace;
+  margin: 0 auto 0;
+  max-width: 536px;
+  padding: 1em 0 ;
+}
+
 .signup-form {
       padding: 0 3.5em 3.5em;
       font-size: 1em;

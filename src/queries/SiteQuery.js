@@ -8,6 +8,7 @@ const query = (status='listed') =>{
             "meta_description": true,
             "news_on": "site.news_on.toBool",
             "news_text": "site.news_text.upper()",
+            "display_columns": "site.display_columns",
             "contact": {
                 "query": "site.children.find('contact')",
                 "select": {
