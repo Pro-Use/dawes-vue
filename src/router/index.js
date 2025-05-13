@@ -5,6 +5,7 @@ import HomeView from '../views/HomeView.vue'
 import ArtistView from '../views/ArtistView.vue'
 import ContactView from '../views/ContactView.vue'
 import NewsView from '../views/NewsView.vue'
+import AboutView from '../views/AboutView.vue'
 import NotFound from '../views/NotFound.vue'
 
 const router = createRouter({
@@ -43,6 +44,12 @@ const router = createRouter({
       component: NewsView
     },
     {
+      path: '/pages/:page_slug',
+      name: 'about',
+      component: AboutView,
+      props: true
+    },
+    {
       path: "/:notFound",
       component: NotFound,
     },
@@ -61,14 +68,15 @@ router.afterEach((to, from) => {
   } else if (to.name == 'artist' || to.name == 'album' ){
     slug = to.params.artist
   }
-  if(from.name == 'home' && to.name == 'artist' || from.name == 'home' && to.name == 'news'){
+  if(from.name == 'home' && ['artist','news', 'about'].includes(to.name)){
       to.meta.transition = 'slideup'
   }
-  else if(from.name == 'artist' && to.name == 'home' || from.name == 'news' && to.name == 'home'){
+  else if( ['artist','news', 'about'].includes(from.name) && to.name == 'home'){
     to.meta.transition = 'slidedown'
   }else{
     to.meta.transition = 'none'
   }
+  console.log('transision', to.meta.transition, to.name, from.name)
 
   console.log(site_data.page_metas[slug])
   useHead({

@@ -13,12 +13,18 @@
                 <div class="ui-layer" style="overflow-x: hidden; width: 100vw;">
                     <ul ref="artist_list" class="artist-list">
                         <li v-for="(artist,index) in site_data.site.artists">
-                            <RouterLink 
+                            <RouterLink v-if="artist.intendedTemplate == 'artist'"
                               :id="index" class="artist-link" :to="artist.id" :style="rotations[index]" 
                               @mouseenter="cur_cover = index"
                             >
                                 <span class="artist-name">{{artist.title}}</span>
                                 <span class="artist-caption">{{artist.caption}}</span>
+                            </RouterLink>
+                            <RouterLink v-else
+                              :id="index" class="artist-link" :to="'/pages/'+artist.slug" :style="rotations[index]" 
+                              @mouseenter="cur_cover = index"
+                            >
+                                <span class="artist-name about-padding">{{artist.title}}</span>
                             </RouterLink>
                         </li>
                     </ul>
@@ -65,6 +71,9 @@
       return null
     } else {
       let covers = site_data.site.artists[i].covers
+      if (!covers.length){
+        return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII="
+      }
       let rand_cover = covers[0]
       return rand_cover.srcset
     }
@@ -92,3 +101,16 @@
   })
 
 </script>
+
+<style scoped>
+  span.about-padding {
+    padding: 15px 5px
+  }
+
+  @media only screen and (min-width: 1500px) {
+    span.about-padding {
+    padding: 5px 15px
+  }
+  }
+
+</style>

@@ -4,6 +4,7 @@ import SiteQuery from '@/queries/SiteQuery.js'
 import ArtistQuery from '@/queries/ArtistQuery.js'
 import NewsQuery from '@/queries/NewsQuery.js'
 import MetaQuery from '@/queries/MetaQuery.js'
+import AboutQuery from '@/queries/AboutQuery.js'
 
 export const useSiteData = defineStore('siteData', () => {
 
@@ -11,21 +12,27 @@ export const useSiteData = defineStore('siteData', () => {
 
 	const site = ref(null)
 	const artists = ref([])
+	const pages = ref([])
 	const news = ref(null)
 	const meta = ref(null)
 
 	const init_data = async () => {
 		const res = await fetch(api, {
-		    method: "post",
-		    body: SiteQuery.query()
+			method: "post",
+			body: SiteQuery.query()
 		})
 		const json = await res.json()
 		site.value = json.result
 		init_meta()
 		console.log(json.result)
-		if (site.value.artists){
+		if (site.value.artists) {
 			site.value.artists.forEach((artist) => {
-				init_artist(artist.slug)
+				if (artist.intendedTemplate == 'artist') {
+					init_artist(artist.slug)
+				} else {
+					init_about(artist.slug)
+				}
+
 			})
 		}
 		init_news()
@@ -33,8 +40,8 @@ export const useSiteData = defineStore('siteData', () => {
 
 	const init_meta = async () => {
 		const res = await fetch(api, {
-		    method: "post",
-		    body: MetaQuery.query()
+			method: "post",
+			body: MetaQuery.query()
 		})
 		const json = await res.json()
 		meta.value = json.result
@@ -42,8 +49,8 @@ export const useSiteData = defineStore('siteData', () => {
 
 	const init_artist = async (artist) => {
 		const res = await fetch(api, {
-		    method: "post",
-		    body: ArtistQuery.query(artist)
+			method: "post",
+			body: ArtistQuery.query(artist)
 		})
 		const json = await res.json()
 		// console.log(json.result)
@@ -52,16 +59,26 @@ export const useSiteData = defineStore('siteData', () => {
 
 	const init_news = async () => {
 		const res = await fetch(api, {
-		    method: "post",
-		    body: NewsQuery.query()
+			method: "post",
+			body: NewsQuery.query()
 		})
 		const json = await res.json()
 		console.log(json.result)
 		news.value = json.result
 	}
 
-	const site_children = computed(()=> {
-		if (site.value){
+	const init_about = async (slug) => {
+		const res = await fetch(api, {
+			method: "post",
+			body: AboutQuery.query(slug)
+		})
+		const json = await res.json()
+		// console.log('about',json.result)
+		pages.value.push(json.result)
+	}
+
+	const site_children = computed(() => {
+		if (site.value) {
 			return site.value.children
 		} else {
 			return []
@@ -70,7 +87,7 @@ export const useSiteData = defineStore('siteData', () => {
 
 	const meta_titles = computed(() => {
 		const titles = {}
-		if (meta.value){
+		if (meta.value) {
 			const site_title = meta.value.meta_title.length ? meta.value.meta_title : meta.value.title
 			meta.value.children.forEach((child) => {
 				const page_title = child.meta_title.length ? child.meta_title : child.title
@@ -88,18 +105,18 @@ export const useSiteData = defineStore('siteData', () => {
 
 	const page_metas = computed(() => {
 		const metas = {}
-		if (meta.value){
+		if (meta.value) {
 			const site_title = meta.value.meta_title.length ? meta.value.meta_title : meta.value.title
 			const site_description = meta.value.meta_description
 			meta.value.children.forEach((child) => {
 				const page_title = child.meta_title.length ? child.meta_title : child.title
 				const page_description = child.meta_description.length ? child.meta_description : site_description
 				const page_meta = {
-				  description: page_description,
-				  ogDescription: page_description,
-				  ogTitle: page_title,
-				  twitterTitle: page_title,
-				  twitterDescription: page_description
+					description: page_description,
+					ogDescription: page_description,
+					ogTitle: page_title,
+					twitterTitle: page_title,
+					twitterDescription: page_description
 				}
 				metas[child.slug] = page_meta
 			})
@@ -107,12 +124,12 @@ export const useSiteData = defineStore('siteData', () => {
 				const page_title = child.meta_title.length ? child.meta_title : child.title
 				const page_description = child.meta_description.length ? child.meta_description : site_description
 				const page_meta = {
-				  title: page_title,
-				  description: page_description,
-				  ogDescription: page_description,
-				  ogTitle: page_title,
-				  twitterTitle: page_title,
-				  twitterDescription: page_description
+					title: page_title,
+					description: page_description,
+					ogDescription: page_description,
+					ogTitle: page_title,
+					twitterTitle: page_title,
+					twitterDescription: page_description
 				}
 				metas[child.slug] = page_meta
 			})
@@ -120,7 +137,7 @@ export const useSiteData = defineStore('siteData', () => {
 		return metas
 	})
 
-	return { 
-		site, init_data, site_children, artists, init_news, news, meta, meta_titles, page_metas
-	  }
+	return {
+		site, init_data, site_children, artists, init_news, init_about, news, pages, meta, meta_titles, page_metas
+	}
 })

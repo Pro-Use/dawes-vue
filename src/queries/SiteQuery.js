@@ -35,6 +35,7 @@ const query = (status='listed') =>{
                     "contact": true,
                     "categories": true,
                     "placeholder": true,
+                    "intendedTemplate": true,
                     "covers": {
                         "query": "page.cover.toFiles",
                         "select":{
