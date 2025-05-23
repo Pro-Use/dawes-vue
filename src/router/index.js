@@ -6,6 +6,7 @@ import ArtistView from '../views/ArtistView.vue'
 import ContactView from '../views/ContactView.vue'
 import NewsView from '../views/NewsView.vue'
 import AboutView from '../views/AboutView.vue'
+import PrivateView from '../views/PrivateView.vue'
 import NotFound from '../views/NotFound.vue'
 
 const router = createRouter({
@@ -20,6 +21,12 @@ const router = createRouter({
       path: '/artists/:artist',
       name: 'artist',
       component: ArtistView,
+      props: true
+    },
+    {
+      path: '/private-pages/:slug',
+      name: 'private',
+      component: PrivateView,
       props: true
     },
     {
